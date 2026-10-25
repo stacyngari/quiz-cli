@@ -64,6 +64,7 @@ async function getAnswer() {
 async function playGame() {
     let score = 0;
     let elapsedSeconds = 0;
+    const playerAnswers = [];
 
     console.log("\n================================");
     console.log("       JAVASCRIPT TRIVIA");
@@ -84,6 +85,7 @@ async function playGame() {
             displayQuestion(question, i);
 
             const answer = await getAnswer();
+            playerAnswers.push(answer);
 
             if (answer === question.answer) {
                 console.log("Correct! Well done.");
@@ -103,7 +105,14 @@ async function playGame() {
         clearInterval(timer);
     }
 
-    const percentage = Math.round((score / questions.length) * 100);
+    const correctAnswers = playerAnswers.filter(
+        (answer, index) => answer === questions[index].answer
+    );
+
+    const percentage = Math.round(
+        (correctAnswers.length / questions.length) * 100
+    );
+
     const minutes = Math.floor(elapsedSeconds / 60);
     const seconds = elapsedSeconds % 60;
 
@@ -111,6 +120,7 @@ async function playGame() {
     console.log("          GAME OVER");
     console.log("================================");
     console.log(`Final score: ${score}/${questions.length}`);
+    console.log(`Correct answers: ${correctAnswers.length}`);
     console.log(`Percentage: ${percentage}%`);
     console.log(`Time taken: ${minutes}m ${seconds}s`);
 
@@ -151,3 +161,4 @@ main().catch((error) => {
     console.error("Something went wrong:", error);
     process.exitCode = 1;
 });
+
